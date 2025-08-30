@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Tes Perusahaan - Memory & Motorik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #333;
+            --text-light: #666;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --primary: #007bff;
+        }
+
+        body {
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--text-dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--text-dark);
+        }
+
+        /* Gaya untuk Tes Memory */
+        .start-screen, .settings-screen {
+            display: block;
+        }
+
+        .test-screen, .result-screen {
+            display: none;
+        }
+
+        .slide-content {
+            font-size: 4em;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin: 40px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInScale 0.5s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .timer-bar {
+            width: 100%;
+            height: 6px;
+            background: #ffecb3;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9800, #f57c00);
+            border-radius: 10px;
+            transition: width linear;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-color: var(--success);
+            color: #155724;
+        }
+
+        .option.wrong {
+            background: linear-gradient(135deg, #f8d7da, #f1b0b7);
+            border-color: var(--danger);
+            color: #721c24;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #0056b3);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #1e7e34);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #e0a800);
+            color: var(--text-dark);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .settings {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .setting-group {
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid var(--success);
+        }
+
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid var(--danger);
+        }
+
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .phase-indicator {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        /* Gaya untuk Tes Motorik */
+        .motorik-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: var(--text-dark);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .game-area {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .motorik-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .motorik-btn:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .motorik-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            width: 100%;
+        }
+
+        .target {
+            width: 40px;
+            height: 40px;
+            background: #ff5252;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .motorik-progress-bar {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .motorik-progress {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .typing-area {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .highlight {
+            background: yellow;
+            color: black;
+        }
+
+        .color-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .color-box {
+            height: 60px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .slide-content {
+                font-size: 2.5em;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .motorik-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Latihan Tes Perusahaan</h1>
+        <p>Tingkatkan kemampuan memory dan motorik Anda untuk persiapan tes perusahaan</p>
+    </header>
+    
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="memory-test">Tes Memory</button>
+        <button class="tab-btn" data-tab="motorik-test">Tes Motorik</button>
+    </div>
+    
+    <div class="container">
+        <!-- Tes Memory -->
+        <div id="memory-test" class="tab-content active">
+            <!-- Start Screen -->
+            <div class="start-screen">
+                <h1>🧠 Tes Memory</h1>
+                <p style="margin-bottom: 30px; font-size: 1.2em; color: var(--text-light);">Latihan untuk Persiapan Tes Masuk Perusahaan</p>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalTests">0</div>
+                        <div class="stat-label">Total Tes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="bestScore">0%</div>
+                        <div class="stat-label">Skor Terbaik</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgScore">0%</div>
+                        <div class="stat-label">Rata-rata</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="showSettings()">⚙️ Pengaturan</button>
+                <button class="btn btn-success" onclick="startTest()">🚀 Mulai Tes</button>
+            </div>
+
+            <!-- Settings Screen -->
+            <div class="settings-screen" style="display: none;">
+                <h2>⚙️ Pengaturan Tes</h2>
+                
+                <div class="settings">
+                    <div class="setting-group">
+                        <label>Jumlah Soal:</label>
+                        <select id="questionCount">
+                            <option value="5">5 Soal (Latihan)</option>
+                            <option value="10">10 Soal</option>
+                            <option value="20" selected>20 Soal (Standar)</option>
+                            <option value="30">30 Soal (Sulit)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Durasi per Slide (detik):</label>
+                        <select id="slideDuration">
+                            <option value="2">2 detik (Sangat Cepat)</option>
+                            <option value="3">3 detik (Cepat)</option>
+                            <option value="4" selected>4 detik (Normal)</option>
+                            <option value="5">5 detik (Santai)</option>
+                            <option value="6">6 detik (Mudah)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Jenis Hewan:</label>
+                        <select id="animalTypes">
+                            <option value="basic" selected>Dasar (4 jenis)</option>
+                            <option value="extended">Diperluas (8 jenis)</option>
+                            <option value="advanced">Lanjutan (12 jenis)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-warning" onclick="showStart()">← Kembali</button>
+                <button class="btn btn-success" onclick="startTest()">🚀 Mulai Tes</button>
+            </div>
+
+            <!-- Test Screen -->
+            <div class="test-screen">
+                <div class="question-info">
+                    <span>Soal <span id="currentQuestion">1</span> dari <span id="totalQuestions">20</span></span>
+                    <span class="phase-indicator" id="phaseIndicator">Fase Menghafal</span>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="timer-bar" id="timerBar" style="display: none;">
+                    <div class="timer-fill" id="timerFill"></div>
+                </div>
+                
+                <div class="slide-content" id="slideContent"></div>
+                
+                <div class="options" id="optionsContainer" style="display: none;"></div>
+                
+                <div class="feedback" id="feedback" style="display: none;"></div>
+                
+                <button class="btn btn-warning" id="nextBtn" style="display: none;" onclick="nextQuestion()">Soal Berikutnya →</button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen">
+                <h2>🎯 Hasil Tes</h2>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="finalScore">0%</div>
+                        <div class="stat-label">Skor Akhir</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="correctAnswers">0</div>
+                        <div class="stat-label">Jawaban Benar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalTime">0s</div>
+                        <div class="stat-label">Total Waktu</div>
+                    </div>
+                </div>
+                
+                <div id="performanceMessage" style="margin: 20px 0; font-size: 1.2em; font-weight: bold;"></div>
+                
+                <button class="btn btn-success" onclick="startTest()">🔄 Tes Lagi</button>
+                <button class="btn btn-primary" onclick="showStart()">← Menu Utama</button>
+            </div>
+        </div>
+        
+        <!-- Tes Motorik -->
+        <div id="motorik-test" class="tab-content">
+            <h2 style="text-align: center; margin-bottom: 30px;">⚡ Tes Kecepatan Motorik</h2>
+            
+            <div class="motorik-container">
+                <div class="card">
+                    <h2>Klik Cepat</h2>
+                    <p>Klik sebanyak mungkin dalam 10 detik</p>
+                    <div class="game-area" id="click-game">
+                        <div id="click-counter">0 Klik</div>
+                        <button class="motorik-btn" id="click-start">Mulai</button>
+                        <div class="motorik-progress-bar">
+                            <div class="motorik-progress" id="click-progress"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Ketepatan Kursor</h2>
+                    <p>Klik target yang muncul secara acak</p>
+                    <div class="game-area" id="accuracy-game">
+                        <div id="accuracy-score">Target: 0/10</div>
+                        <button class="motorik-btn" id="accuracy-start">Mulai</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Kecepatan Mengetik</h2>
+                    <p>Ketik teks yang ditampilkan secepat mungkin</p>
+                    <div class="game-area">
+                        <div id="typing-prompt">Teks akan muncul di sini</div>
+                        <input type="text" class="typing-area" id="typing-input" disabled>
+                        <div id="typing-stats">Kecepatan: 0 KPM | Akurasi: 0%</div>
+                        <button class="motorik-btn" id="typing-start">Mulai</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2>Memori & Reaksi</h2>
+                    <p>Ingat dan klik urutan warna yang ditampilkan</p>
+                    <div class="game-area" id="memory-game">
+                        <div id="memory-instruction">Perhatikan urutan warna yang muncul</div>
+                        <div class="color-boxes">
+                            <div class="color-box" data-color="red" style="background: red;"></div>
+                            <div class="color-box" data-color="blue" style="background: blue;"></div>
+                            <div class="color-box" data-color="green" style="background: green;"></div>
+                            <div class="color-box" data-color="yellow" style="background: yellow;"></div>
+                        </div>
+                        <button class="motorik-btn" id="memory-start">Mulai</button>
+                        <div id="memory-score">Level: 1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk tab navigation
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Hapus kelas active dari semua tab
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Sembunyikan semua konten tab
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Aktifkan tab yang diklik
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===== KODE UNTUK TES MEMORY =====
+        // Game state
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let score = 0;
+        let startTime;
+        let currentSlideIndex = 0;
+        let slideTimer;
+        let questionTimer;
+        let settings = {
+            questionCount: 20,
+            slideDuration: 4,
+            animalTypes: 'basic'
+        };
+
+        // Animal databases
+        const animals = {
+            basic: ['ayam', 'babi', 'sapi', 'angsa'],
+            extended: ['ayam', 'babi', 'sapi', 'angsa', 'kambing', 'kuda', 'bebek', 'domba'],
+            advanced: ['ayam', 'babi', 'sapi', 'angsa', 'kambing', 'kuda', 'bebek', 'domba', 'kelinci', 'kucing', 'anjing', 'burung']
+        };
+
+        // Statistics functions
+        function loadStats() {
+            const stats = JSON.parse(localStorage.getItem('memoryTestStats') || '{"totalTests": 0, "scores": []}');
+            document.getElementById('totalTests').textContent = stats.totalTests;
+            
+            if (stats.scores.length > 0) {
+                const bestScore = Math.max(...stats.scores);
+                const avgScore = stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length;
+                document.getElementById('bestScore').textContent = bestScore + '%';
+                document.getElementById('avgScore').textContent = Math.round(avgScore) + '%';
+            }
+        }
+
+        function saveStats(score) {
+            const stats = JSON.parse(localStorage.getItem('memoryTestStats') || '{"totalTests": 0, "scores": []}');
+            stats.totalTests++;
+            stats.scores.push(score);
+            
+            // Keep only last 50 scores
+            if (stats.scores.length > 50) {
+                stats.scores = stats.scores.slice(-50);
+            }
+            
+            localStorage.setItem('memoryTestStats', JSON.stringify(stats));
+        }
+
+        // Screen navigation
+        function showStart() {
+            document.querySelector('.start-screen').style.display = 'block';
+            document.querySelector('.settings-screen').style.display = 'none';
+            document.querySelector('.test-screen').style.display = 'none';
+            document.querySelector('.result-screen').style.display = 'none';
+            loadStats();
+        }
+
+        function showSettings() {
+            document.querySelector('.start-screen').style.display = 'none';
+            document.querySelector('.settings-screen').style.display = 'block';
+            document.querySelector('.test-screen').style.display = 'none';
+            document.querySelector('.result-screen').style.display = 'none';
+        }
+
+        function showTest() {
+            document.querySelector('.start-screen').style.display = 'none';
+            document.querySelector('.settings-screen').style.display = 'none';
+            document.querySelector('.test-screen').style.display = 'block';
+            document.querySelector('.result-screen').style.display = 'none';
+        }
+
+        function showResults() {
+            document.querySelector('.start-screen').style.display = 'none';
+            document.querySelector('.settings-screen').style.display = 'none';
+            document.querySelector('.test-screen').style.display = 'none';
+            document.querySelector('.result-screen').style.display = 'block';
+        }
+
+        // Question generation - DIPERBAIKI: Pastikan tidak ada hewan ganda dalam satu soal
+        function generateQuestions() {
+            questions = [];
+            const animalList = animals[settings.animalTypes];
+            
+            for (let i = 0; i < settings.questionCount; i++) {
+                const questionAnimals = [];
+                const usedNumbers = new Set();
+                const usedAnimals = new Set(); // Set untuk melacak hewan yang sudah digunakan
+                
+                // Generate 4 animals with unique numbers AND unique animals
+                for (let j = 0; j < 4; j++) {
+                    let number;
+                    do {
+                        number = Math.floor(Math.random() * 99) + 1;
+                    } while (usedNumbers.has(number));
+                    usedNumbers.add(number);
+                    
+                    let animal;
+                    let attempts = 0;
+                    const maxAttempts = 50; // Batasi percobaan untuk menghindari infinite loop
+                    
+                    do {
+                        animal = animalList[Math.floor(Math.random() * animalList.length)];
+                        attempts++;
+                        
+                        // Jika sudah terlalu banyak percobaan, reset usedAnimals
+                        if (attempts > maxAttempts) {
+                            usedAnimals.clear();
+                            break;
+                        }
+                    } while (usedAnimals.has(animal));
+                    
+                    usedAnimals.add(animal);
+                    questionAnimals.push({ animal, number });
+                }
+                
+                // Choose random animal to ask about
+                const targetIndex = Math.floor(Math.random() * 4);
+                const target = questionAnimals[targetIndex];
+                
+                // Generate wrong answers
+                const wrongNumbers = [];
+                while (wrongNumbers.length < 3) {
+                    const wrongNum = Math.floor(Math.random() * 99) + 1;
+                    if (wrongNum !== target.number && !wrongNumbers.includes(wrongNum)) {
+                        wrongNumbers.push(wrongNum);
+                    }
+                }
+                
+                // Create options array and shuffle
+                const options = [target.number, ...wrongNumbers];
+                for (let k = options.length - 1; k > 0; k--) {
+                    const j = Math.floor(Math.random() * (k + 1));
+                    [options[k], options[j]] = [options[j], options[k]];
+                }
+                
+                questions.push({
+                    slides: questionAnimals,
+                    target: target,
+                    options: options,
+                    correctAnswer: target.number
+                });
+            }
+        }
+
+        // Test functions
+        function startTest() {
+            // Load settings
+            settings.questionCount = parseInt(document.getElementById('questionCount').value);
+            settings.slideDuration = parseInt(document.getElementById('slideDuration').value);
+            settings.animalTypes = document.getElementById('animalTypes').value;
+            
+            // Reset game state
+            currentQuestionIndex = 0;
+            score = 0;
+            startTime = Date.now();
+            
+            // Generate questions
+            generateQuestions();
+            
+            // Update UI
+            document.getElementById('totalQuestions').textContent = settings.questionCount;
+            
+            showTest();
+            startQuestion();
+        }
+
+        function startQuestion() {
+            const question = questions[currentQuestionIndex];
+            currentSlideIndex = 0;
+            
+            // Update question info
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('phaseIndicator').textContent = 'Fase Menghafal';
+            
+            // Hide question elements
+            document.getElementById('optionsContainer').style.display = 'none';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('timerBar').style.display = 'none';
+            
+            // Update progress
+            const progress = (currentQuestionIndex / settings.questionCount) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            showNextSlide();
+        }
+
+        function showNextSlide() {
+            const question = questions[currentQuestionIndex];
+            
+            if (currentSlideIndex < question.slides.length) {
+                const slide = question.slides[currentSlideIndex];
+                document.getElementById('slideContent').textContent = `${slide.number} ${slide.animal}`;
+                
+                slideTimer = setTimeout(() => {
+                    currentSlideIndex++;
+                    showNextSlide();
+                }, settings.slideDuration * 1000);
+            } else {
+                showQuestionPhase();
+            }
+        }
+
+        function showQuestionPhase() {
+            clearTimeout(slideTimer);
+            
+            const question = questions[currentQuestionIndex];
+            
+            // Update phase indicator
+            document.getElementById('phaseIndicator').textContent = 'Fase Pertanyaan';
+            
+            // Show question
+            document.getElementById('slideContent').textContent = `Berapa ${question.target.animal}?`;
+            
+            // Show options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'grid';
+            
+            question.options.forEach((option, index) => {
+                const optionBtn = document.createElement('div');
+                optionBtn.className = 'option';
+                optionBtn.textContent = `${String.fromCharCode(97 + index)}. ${option}`;
+                optionBtn.onclick = () => selectAnswer(option);
+                optionsContainer.appendChild(optionBtn);
+            });
+            
+            // Show timer bar
+            document.getElementById('timerBar').style.display = 'block';
+            document.getElementById('timerFill').style.width = '100%';
+            document.getElementById('timerFill').style.transition = 'width 10s linear';
+            
+            // Start 10 second timer
+            setTimeout(() => {
+                document.getElementById('timerFill').style.width = '0%';
+            }, 100);
+            
+            questionTimer = setTimeout(() => {
+                selectAnswer(null); // Time out
+            }, 10000);
+        }
+
+        function selectAnswer(selectedAnswer) {
+            clearTimeout(questionTimer);
+            
+            const question = questions[currentQuestionIndex];
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            
+            // Disable all options
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                const optionValue = parseInt(option.textContent.split('. ')[1]);
+                
+                if (optionValue === question.correctAnswer) {
+                    option.classList.add('correct');
+                } else if (optionValue === selectedAnswer) {
+                    option.classList.add('wrong');
+                }
+            });
+            
+            // Show feedback
+            feedback.style.display = 'block';
+            
+            if (selectedAnswer === question.correctAnswer) {
+                score++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✅ Benar! Jawaban yang tepat.';
+            } else if (selectedAnswer === null) {
+                feedback.className = 'feedback wrong';
+                feedback.textContent = '⏰ Waktu habis! Jawaban yang benar: ' + question.correctAnswer;
+            } else {
+                feedback.className = 'feedback wrong';
+                feedback.textContent = '❌ Salah! Jawaban yang benar: ' + question.correctAnswer;
+            }
+            
+            // Hide timer bar
+            document.getElementById('timerBar').style.display = 'none';
+            
+            // Show next button
+            if (currentQuestionIndex < questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'block';
+            } else {
+                setTimeout(endTest, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            startQuestion();
+        }
+
+        function endTest() {
+            const totalTime = Math.round((Date.now() - startTime) / 1000);
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            // Save statistics
+            saveStats(percentage);
+            
+            // Update result screen
+            document.getElementById('finalScore').textContent = percentage + '%';
+            document.getElementById('correctAnswers').textContent = score + '/' + questions.length;
+            document.getElementById('totalTime').textContent = totalTime + 's';
+            
+            // Performance message
+            const performanceMessage = document.getElementById('performanceMessage');
+            if (percentage >= 90) {
+                performanceMessage.textContent = '🏆 Luar biasa! Anda siap untuk tes perusahaan!';
+                performanceMessage.style.color = '#28a745';
+            } else if (percentage >= 70) {
+                performanceMessage.textContent = '👍 Bagus! Terus latihan untuk hasil yang lebih baik.';
+                performanceMessage.style.color = '#007bff';
+            } else if (percentage >= 50) {
+                performanceMessage.textContent = '📚 Cukup baik. Latih lagi untuk meningkatkan memory.';
+                performanceMessage.style.color = '#ffc107';
+            } else {
+                performanceMessage.textContent = '💪 Jangan menyerah! Latihan lebih banyak lagi.';
+                performanceMessage.style.color = '#dc3545';
+            }
+            
+            showResults();
+        }
+
+        // ===== KODE UNTUK TES MOTORIK =====
+        // Game Klik Cepat
+        const clickStart = document.getElementById('click-start');
+        const clickCounter = document.getElementById('click-counter');
+        const clickProgress = document.getElementById('click-progress');
+        let clickCount = 0;
+        let clickTimer;
+
+        clickStart.addEventListener('click', function() {
+            clickCount = 0;
+            clickCounter.textContent = '0 Klik';
+            clickStart.disabled = true;
+            clickProgress.style.width = '0%';
+            
+            let timeLeft = 10;
+            clickTimer = setInterval(function() {
+                timeLeft--;
+                clickProgress.style.width = (100 - timeLeft * 10) + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(clickTimer);
+                    clickStart.disabled = false;
+                    alert(`Waktu habis! Anda melakukan ${clickCount} klik dalam 10 detik.`);
+                }
+            }, 1000);
+        });
+
+        document.getElementById('click-game').addEventListener('click', function(e) {
+            if (e.target === clickStart) return; // Jangan hitung klik pada tombol mulai
+            if (clickStart.disabled) {
+                clickCount++;
+                clickCounter.textContent = clickCount + ' Klik';
+            }
+        });
+
+        // Game Ketepatan Kursor
+        const accuracyStart = document.getElementById('accuracy-start');
+        const accuracyScore = document.getElementById('accuracy-score');
+        const accuracyGame = document.getElementById('accuracy-game');
+        let accuracyCount = 0;
+        let totalTargets = 10;
+        let targetsCreated = 0;
+
+        accuracyStart.addEventListener('click', function() {
+            accuracyCount = 0;
+            targetsCreated = 0;
+            accuracyScore.textContent = `Target: ${accuracyCount}/${totalTargets}`;
+            accuracyStart.disabled = true;
+            
+            // Hapus target sebelumnya jika ada
+            document.querySelectorAll('.target').forEach(target => target.remove());
+            
+            createNewTarget();
+        });
+
+        function createNewTarget() {
+            if (targetsCreated >= totalTargets) {
+                accuracyStart.disabled = false;
+                alert(`Permainan selesai! Skor akhir: ${accuracyCount}/${totalTargets}`);
+                return;
+            }
+            
+            const target = document.createElement('div');
+            target.classList.add('target');
+            
+            const gameRect = accuracyGame.getBoundingClientRect();
+            const maxX = gameRect.width - 40;
+            const maxY = gameRect.height - 40;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            target.style.left = randomX + 'px';
+            target.style.top = randomY + 'px';
+            
+            target.addEventListener('click', function() {
+                accuracyCount++;
+                accuracyScore.textContent = `Target: ${accuracyCount}/${totalTargets}`;
+                target.remove();
+                targetsCreated++;
+                createNewTarget();
+            });
+            
+            accuracyGame.appendChild(target);
+            targetsCreated++;
+        }
+
+        // Game Kecepatan Mengetik
+        const typingStart = document.getElementById('typing-start');
+        const typingPrompt = document.getElementById('typing-prompt');
+        const typingInput = document.getElementById('typing-input');
+        const typingStats = document.getElementById('typing-stats');
+        
+        const sampleTexts = [
+            "Kecepatan dan ketepatan adalah kunci sukses dalam tes perusahaan.",
+            "Melatih kemampuan motorik akan meningkatkan produktivitas kerja sehari-hari.",
+            "Dengan berlatih secara konsisten, Anda akan mampu menghadapi berbagai tes kecepatan.",
+            "Keyboard proficiency is essential for many corporate speed tests."
+        ];
+        
+        let startTimeTyping;
+        let currentText = "";
+        
+        typingStart.addEventListener('click', function() {
+            currentText = sampleTexts[Math.floor(Math.random() * sampleTexts.length)];
+            typingPrompt.textContent = currentText;
+            typingInput.value = "";
+            typingInput.disabled = false;
+            typingInput.focus();
+            typingStats.textContent = "Kecepatan: 0 KPM | Akurasi: 0%";
+            startTimeTyping = new Date();
+            typingStart.disabled = true;
+        });
+        
+        typingInput.addEventListener('input', function() {
+            const typedText = typingInput.value;
+            const elapsedTime = (new Date() - startTimeTyping) / 60000; // dalam menit
+            const typedWords = typedText.trim().split(/\s+/).length;
+            const speed = Math.round(typedWords / elapsedTime);
+            
+            // Hitung akurasi
+            let correctChars = 0;
+            for (let i = 0; i < typedText.length; i++) {
+                if (i < currentText.length && typedText[i] === currentText[i]) {
+                    correctChars++;
+                }
+            }
+            
+            const accuracy = typedText.length > 0 ? Math.round((correctChars / typedText.length) * 100) : 0;
+            
+            typingStats.textContent = `Kecepatan: ${speed} KPM | Akurasi: ${accuracy}%`;
+            
+            if (typedText === currentText) {
+                typingInput.disabled = true;
+                typingStart.disabled = false;
+                const finalTime = (new Date() - startTimeTyping) / 1000; // dalam detik
+                alert(`Selamat! Anda mengetik teks dengan akurasi ${accuracy}% dalam ${finalTime.toFixed(1)} detik.`);
+            }
+        });
+
+        // Game Memori & Reaksi
+        const memoryStart = document.getElementById('memory-start');
+        const memoryInstruction = document.getElementById('memory-instruction');
+        const memoryScoreElement = document.getElementById('memory-score');
+        const colorBoxes = document.querySelectorAll('.color-box');
+        
+        let sequence = [];
+        let playerSequence = [];
+        let level = 1;
+        let isPlaying = false;
+        
+        memoryStart.addEventListener('click', function() {
+            if (isPlaying) return;
+            
+            isPlaying = true;
+            sequence = [];
+            playerSequence = [];
+            level = 1;
+            memoryScoreElement.textContent = "Level: 1";
+            memoryInstruction.textContent = "Perhatikan urutan warna yang muncul";
+            memoryStart.disabled = true;
+            
+            // Nonaktifkan klik pada kotak warna selama urutan ditampilkan
+            colorBoxes.forEach(box => {
+                box.style.pointerEvents = 'none';
+            });
+            
+            generateSequence();
+            playSequence();
+        });
+        
+        function generateSequence() {
+            for (let i = 0; i < level; i++) {
+                const randomColor = ['red', 'blue', 'green', 'yellow'][Math.floor(Math.random() * 4)];
+                sequence.push(randomColor);
+            }
+        }
+        
+        function playSequence() {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i >= sequence.length) {
+                    clearInterval(interval);
+                    memoryInstruction.textContent = "Sekarang giliran Anda! Ulangi urutannya";
+                    
+                    // Aktifkan klik pada kotak warna
+                    colorBoxes.forEach(box => {
+                        box.style.pointerEvents = 'auto';
+                    });
+                    return;
+                }
+                
+                const color = sequence[i];
+                const box = document.querySelector(`.color-box[data-color="${color}"]`);
+                box.style.transform = 'scale(1.2)';
+                
+                setTimeout(() => {
+                    box.style.transform = 'scale(1)';
+                }, 500);
+                
+                i++;
+            }, 1000);
+        }
+        
+        colorBoxes.forEach(box => {
+            box.addEventListener('click', function() {
+                if (!isPlaying) return;
+                
+                const color = this.dataset.color;
+                playerSequence.push(color);
+                
+                this.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 300);
+                
+                // Periksa apakah urutan pemain sesuai
+                const currentIndex = playerSequence.length - 1;
+                if (playerSequence[currentIndex] !== sequence[currentIndex]) {
+                    // Game over
+                    isPlaying = false;
+                    memoryInstruction.textContent = "Game Over! Urutan salah.";
+                    memoryStart.disabled = false;
+                    
+                    // Nonaktifkan klik pada kotak warna
+                    colorBoxes.forEach(box => {
+                        box.style.pointerEvents = 'none';
+                    });
+                    
+                    alert(`Game Over! Anda mencapai level ${level}.`);
+                    return;
+                }
+                
+                // Jika urutan pemain sudah sepanjang urutan
+                if (playerSequence.length === sequence.length) {
+                    // Level completed
+                    level++;
+                    memoryScoreElement.textContent = `Level: ${level}`;
+                    playerSequence = [];
+                    
+                    // Nonaktifkan klik pada kotak warna
+                    colorBoxes.forEach(box => {
+                        box.style.pointerEvents = 'none';
+                    });
+                    
+                    setTimeout(() => {
+                        memoryInstruction.textContent = "Perhatikan urutan warna yang muncul";
+                        generateSequence();
+                        playSequence();
+                    }, 1000);
+                }
+            });
+        });
+
+        // Initialize
+        window.onload = function() {
+            showStart();
+            
+            // Inisialisasi tes motorik
+            typingInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
